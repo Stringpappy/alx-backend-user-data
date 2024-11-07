@@ -7,13 +7,13 @@ import logging
 import mysql.connector
 from typing import List
 
-# Regular expression patterns for extracting and replacing fields.
+""" Regular expression patterns for extracting and replacing fields."""
 patterns = {
     'extract': lambda x, y: r'(?P<field>{})=[^{}]*'.format('|'.join(x), y),
     'replace': lambda x: r'\g<field>={}'.format(x),
 }
 
-# Fields that should be redacted in log messages.
+"""Fields that should be redacted in log messages."""
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
@@ -40,7 +40,6 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     db_name = os.getenv("PERSONAL_DATA_DB_NAME", "")
     db_user = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
     db_pwd = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
-    
     connection = mysql.connector.connect(
         host=db_host,
         port=3306,
@@ -50,6 +49,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     )
     return connection
 
+
 def main():
     """Fetches user data and logs it with redacted sensitive fields."""
     fields = "name,email,phone,ssn,password,ip,last_login,user_agent"
@@ -57,7 +57,6 @@ def main():
     query = "SELECT {} FROM users;".format(fields)
     info_logger = get_logger()
     connection = get_db()
-    
     with connection.cursor() as cursor:
         cursor.execute(query)
         rows = cursor.fetchall()
@@ -68,17 +67,16 @@ def main():
             log_record = logging.LogRecord(*args)
             info_logger.handle(log_record)
 
+
 class RedactingFormatter(logging.Formatter):
     """Custom formatter that redacts sensitive fields in log messages."""
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-
     def __init__(self, fields: List[str]):
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
-
 
     def format(self, record: logging.LogRecord) -> str:
         """Formats the log record and applies redaction."""
@@ -86,6 +84,6 @@ class RedactingFormatter(logging.Formatter):
         txt = filter_datum(self.fields, self.REDACTION, msg, self.SEPARATOR)
         return txt
 
+
 if __name__ == "__main__":
     main()
-
