@@ -10,7 +10,7 @@ class Auth:
     """ class that Authenticate.
     """
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """method if a path requires authentication.
+        """method that checkif a path requires authentication.
         """
         if path is not None and excluded_paths is not None:
             for exclusion_path in map(lambda x: x.strip(), excluded_paths):
@@ -26,13 +26,13 @@ class Auth:
         return True
 
     def authorization_header(self, request=None) -> str:
-        """Gets the authorization header field from the request.
+        """method that Gets the authorization header field from the request.
         """
         if request is not None:
             return request.headers.get('Authorization', None)
         return None
 
     def current_user(self, request=None) -> TypeVar('User'):
-        """Gets the current user from the request.
+        """method that Gets the current user from the request.
         """
         return None
