@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""module Authentication module for the API.
+"""module that  Authenticate for the API.
 """
 import re
 from typing import List, TypeVar
@@ -7,10 +7,10 @@ from flask import request
 
 
 class Auth:
-    """Authentication class.
+    """ class that Authenticate.
     """
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """Checks if a path requires authentication.
+        """method if a path requires authentication.
         """
         if path is not None and excluded_paths is not None:
             for exclusion_path in map(lambda x: x.strip(), excluded_paths):
