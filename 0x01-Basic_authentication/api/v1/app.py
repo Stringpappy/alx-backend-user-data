@@ -32,6 +32,12 @@ def not_found(error) -> str:
 @app.errorhandler(401)
 def unauthorized(error) -> str:
     """Unauthorized handler.
+    The jsonify function in Flask is used to convert data, typically
+    a Python dictionary, into a JSON response that can be returned to
+    the client. It serializes Python objects (such as dictionaries, lists,
+    etc.) into a JSON-formatted string, and it also sets the
+    appropriate HTTP response
+    headers (specifically, the Content-Type header to application/json).
     """
     return jsonify({"error": "Unauthorized"}), 401
 
